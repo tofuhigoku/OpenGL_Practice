@@ -1,0 +1,3 @@
+/home/ms/openGL/Coordinate_System/CMakeFiles/GL_Coordinate_system.dir
+/home/ms/openGL/Coordinate_System/CMakeFiles/edit_cache.dir
+/home/ms/openGL/Coordinate_System/CMakeFiles/rebuild_cache.dir

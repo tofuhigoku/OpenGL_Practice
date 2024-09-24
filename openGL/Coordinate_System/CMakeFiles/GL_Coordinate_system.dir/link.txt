@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wall -std=c++11 -lpthread -lGL -lGLEW -lglfw -lGLU -rdynamic CMakeFiles/GL_Coordinate_system.dir/Coordinate_system.cpp.o -o GL_Coordinate_system  -lglfw -lGLEW -lGL -lGLU

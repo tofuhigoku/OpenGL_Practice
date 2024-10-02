@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/ms/OpenGL_Practice/openGL/Model_loading/Model_loading.cpp" "CMakeFiles/GL_ModelLoading.dir/Model_loading.cpp.o" "gcc" "CMakeFiles/GL_ModelLoading.dir/Model_loading.cpp.o.d"
+  "/home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/Model_loading.cpp" "CMakeFiles/GL_ModelLoading.dir/Model_loading.cpp.o" "gcc" "CMakeFiles/GL_ModelLoading.dir/Model_loading.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

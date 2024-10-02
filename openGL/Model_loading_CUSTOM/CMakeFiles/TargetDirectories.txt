@@ -1,3 +1,3 @@
-/home/ms/OpenGL_Practice/openGL/Model_loading/CMakeFiles/GL_ModelLoading.dir
-/home/ms/OpenGL_Practice/openGL/Model_loading/CMakeFiles/edit_cache.dir
-/home/ms/OpenGL_Practice/openGL/Model_loading/CMakeFiles/rebuild_cache.dir
+/home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/CMakeFiles/GL_ModelLoading.dir
+/home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/CMakeFiles/edit_cache.dir
+/home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/CMakeFiles/rebuild_cache.dir

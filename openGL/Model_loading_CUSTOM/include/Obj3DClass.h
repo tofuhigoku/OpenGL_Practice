@@ -34,11 +34,18 @@ struct line_data
     float d1,d2,d3;
 };
 
-struct Vertex {
-    float position[3];
-    float normal[3];
-    float textureCoordinate[2];
+struct Vertex_st {
+    glm::vec3 position;
+    glm::vec3 normal;
+    glm::vec2 textureCoordinate;
 };
+
+struct Texture {
+    unsigned int id;
+    string mtl_name;
+    string path;
+};
+
 
 struct Object
 {
@@ -50,6 +57,7 @@ struct Object
 
     size_t NumOFFaces;
 
+    unsigned int VAO, VBO, EBO;
     // size_t NumOFVertex_position;
     // size_t NumOFVertex_normal;
     // size_t NumOFTexture_coordinate;
@@ -59,34 +67,70 @@ struct Object
 class ObjClass
 {
     public:
+        string model_name;
+        string mtl_name;
+
         struct Object obj_buffer;
         unsigned int index;
 
         vector<struct Object> obj_vector;
-        vector<glm::vec3> v;
-        vector<glm::vec3> vn;
-        vector<glm::vec2> vt;
-        vector<unsigned int> faces_indices;
+        vector<struct Texture> Texture_vector;
+        // vector<glm::vec3> v;
+        // vector<glm::vec3> vn;
+        // vector<glm::vec2> vt;
+        vector<glm::uvec3> faces_indices;
+        vector<Vertex_st> face_data;
         line_data rawline;
 
-        ObjClass();
+        ObjClass(const string &path);
         ~ObjClass();
 
         int importOBJ(const string &path);
+        string getName();
+        string getDir();
 
     private:
+        bool statusOK;
+        string directory;
+        void setName(const string &name);
+
         int process_rawdata(FILE* fd);
         int ExtractFaceindices(const char* dataline);
 
         int fill_nametag(char* nametag);
         int fill_mtlname(const char* mtlname);
+
+        int GlobTexture();
+
+        int setupObjectMesh(struct Object* p_object_buffer, unsigned int &object_buffer_index);
+        int Draw(ShaderClass &shader);
 };
 
 
-ObjClass::ObjClass()
+ObjClass::ObjClass(const string &path)
     {
         memset(&obj_buffer, 0, sizeof(obj_buffer));
         index = 0;
+        if(importOBJ(path) == 0)
+        {
+            statusOK = true;
+        }
+        else
+        {
+            statusOK = false;
+        }
+
+        if(statusOK == true)
+        {
+            size_t pos = path.find_last_of('/');
+            setName(path.substr(pos+1,path.size() -1-pos ));
+            directory = path.substr(0, pos);
+
+            if(mtl_name.size() <= strlen(".mtl"))
+            {
+                cout << "mtl file not found!" << endl;
+            }
+        }
     }
 
 ObjClass::~ObjClass()
@@ -121,7 +165,7 @@ int ObjClass::importOBJ(const string &path)
         if (ret == 0)
         {
             /* code */
-
+            ret = process_rawdata(fd_src);
         }
 
         if(fd_src != NULL) fclose(fd_src);
@@ -132,6 +176,9 @@ int ObjClass::importOBJ(const string &path)
 int ObjClass::process_rawdata(FILE* fd)
     {
         int ret = 0;
+        vector<glm::vec3> v;
+        vector<glm::vec3> vn;
+        vector<glm::vec2> vt;
         FILE* local_fd = NULL;
         if(fd == NULL)
         {
@@ -142,9 +189,9 @@ int ObjClass::process_rawdata(FILE* fd)
 
         char * line = NULL;
         size_t len = 0;
-        size_t read;
+        ssize_t read;
         // size_t write;
-
+        
 
         while((read = getline(&line, &len, local_fd)) != -1)
         {
@@ -158,7 +205,19 @@ int ObjClass::process_rawdata(FILE* fd)
             }
 
 
-            sscanf(line, "%s %f %f %f", rawline, &rawline.d1, &rawline.d2, &rawline.d3);
+            sscanf(line, "%s %f %f %f", rawline.tag, &rawline.d1, &rawline.d2, &rawline.d3);
+            if(strcmp(rawline.tag, "mtllib") ==0 )
+            {
+                char tag2[100];
+                sscanf(line, "%s %s", rawline.tag, tag2);
+                if(strlen(tag2) > 0)
+                {
+                    string str(tag2);
+                    mtl_name = str;
+                }
+                continue;
+            }
+
             switch (rawline.tag[0])
             {
             case 'v':   /**< line format is match with vertex type */
@@ -223,6 +282,16 @@ int ObjClass::process_rawdata(FILE* fd)
                 break;
             }
         }
+
+        for(size_t ss = 0; ss < faces_indices.size(); ss ++)
+        {
+            struct Vertex_st tmp = {v[faces_indices[ss][0]-1], vn[faces_indices[ss][2]-1], vt[faces_indices[ss][1]-1] };
+            // printf("face idx 1: v1 %d vn1 %d vt1 %d \n",faces_indices[ss][0]-1 , faces_indices[ss][1]-1 ,faces_indices[ss][2]-1);
+            // printf("face data: v= %f, %f, %f\tvn= %f, %f, %f\tvt= %f, %f\n",tmp.position.x, tmp.position.y, tmp.position.z, tmp.normal.x,tmp.normal.y, tmp.normal.z, tmp.textureCoordinate.x, tmp.textureCoordinate.y);
+            face_data.push_back(tmp);
+        }
+
+        return ret;
     }
 
 int ObjClass::ExtractFaceindices(const char* dataline)
@@ -252,9 +321,9 @@ int ObjClass::ExtractFaceindices(const char* dataline)
         char tag[10];
         unsigned int num[9];
         sscanf(local_buffer, "%s %d %d %d %d %d %d %d %d %d", tag, &num[0], &num[1], &num[2], &num[3], &num[4], &num[5],&num[6], &num[7], &num[8]);
-        for(int i =0; i < sizeof(num)/sizeof(unsigned int); i++)
+        for(size_t i =0; i < 3; i++)
         {
-            faces_indices.push_back(num[i]);
+            faces_indices.push_back(glm::vec3(num[i*3], num[i*3+1], num[i*3+2]));
         }
         return 0;
     }
@@ -312,5 +381,85 @@ int ObjClass::fill_mtlname(const char* mtlname)
 
         return 0;
     }
+
+void ObjClass::setName(const string &name)
+{
+    model_name = name;
+}
+
+string ObjClass::getName()
+{
+    // cout << sizeof(Vertex_st) << endl;
+    return model_name;
+}
+
+string ObjClass::getDir()
+{
+    return directory;
+}
+
+int ObjClass::GlobTexture()
+{
+    int ret = 0;
+
+
+
+    return ret;
+}
+
+int ObjClass::setupObjectMesh(struct Object* p_object_buffer, unsigned int &object_buffer_index)
+{
+
+    int ret = 0;
+    if(p_object_buffer == NULL)
+    {
+        cout << "p_object_buffer = NULL => setupObjectMesh failed" << endl;
+        return 1;
+    }
+    unsigned int offset = 0;
+    for (size_t u = 0; u < object_buffer_index; u++)
+    {
+        offset += obj_vector[u].NumOFFaces;
+    }
+    unsigned int* p_VAO  = &p_object_buffer->VAO;
+    unsigned int* p_VBO = &p_object_buffer->VBO;
+    unsigned int* p_EBO = &p_object_buffer->EBO;
+
+    glGenVertexArrays(1, p_VAO);
+    glGenBuffers(1, p_VBO);
+    glGenBuffers(1, p_EBO);
+
+    glBindVertexArray(*p_VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, *p_VBO);
+        glBufferData(GL_ARRAY_BUFFER, p_object_buffer->NumOFFaces * sizeof(Vertex_st), &face_data[offset], GL_STATIC_DRAW);
+
+        // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *p_EBO);
+        // glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
+        // vertex positions
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex_st), (void*)0);
+
+        // vertex normals
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex_st), (void*)offsetof(Vertex_st, normal));
+
+        // vertex texture coords
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex_st), (void*)offsetof(Vertex_st, textureCoordinate));
+        
+    glBindVertexArray(0);
+
+    return ret;
+}
+
+int ObjClass::Draw(ShaderClass &shader)
+{
+    for(unsigned int i = 0; i < obj_vector.size(); i++)
+    {
+        // obj_vector[i].Draw(shader);
+        cout << "Draw object: " << obj_vector[i].object_tag << " usemtl: " << obj_vector[i].mtl_name << endl;
+    }
+}
 
 #endif

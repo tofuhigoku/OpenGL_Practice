@@ -432,6 +432,10 @@ int main(int argc, char** argv)
     // }
 
     // printf("\n");
+    cout << "point Num " << v.size() << endl;
+    cout << "Normal Num " << vn.size() << endl;
+    cout << "Texture coord Num " << vt.size() << endl;
+    cout << "face Num " << faces_indices.size() << endl;
     
 
     return 0;

@@ -197,6 +197,7 @@ CMakeFiles/GL_ModelLoading.dir/Model_loading.cpp.o: Model_loading.cpp \
   include/ImageClass.h \
   include/Mesh.h \
   include/ModelClass.h \
+  include/Obj3DClass.h \
   include/ShaderClass.h \
   /usr/include/GL/gl.h \
   /usr/include/GL/glew.h \
@@ -685,6 +686,8 @@ CMakeFiles/GL_ModelLoading.dir/Model_loading.cpp.o: Model_loading.cpp \
 
 /usr/include/c++/9/bits/ostream_insert.h:
 
+/usr/include/c++/9/bits/nested_exception.h:
+
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/glm.hpp:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/fwd.hpp:
@@ -738,8 +741,6 @@ include/ModelClass.h:
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/gtc/epsilon.inl:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_bool4_precision.hpp:
-
-/usr/include/c++/9/bits/nested_exception.h:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_bool3.hpp:
 
@@ -1178,6 +1179,8 @@ include/Mesh.h:
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/mat3x4.hpp:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_float1.hpp:
+
+include/Obj3DClass.h:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_float2.hpp:
 

@@ -20,6 +20,7 @@
 #include "ShaderClass.h"
 #include "Mesh.h"
 #include "ModelClass.h"
+#include "Obj3DClass.h"
 
 #define STBI_FAILURE_USERMSG
 #define STB_IMAGE_IMPLEMENTATION
@@ -49,7 +50,7 @@ uint8_t Fill_or_Line = 0xff;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-glViewport(0, 0, width, height);
+    glViewport(0, 0, width, height);
 }
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
@@ -168,15 +169,66 @@ int main(int argc, char** argv)
 
     // load models
     // -----------
-    Model OwOModel("./backpack/backpack.obj");
+    // Model OwOModel("./backpack/backpack.obj");
     // Model OwOModel("./sketch/final_v01.obj");
 
+    string obj_path("./sketch/final_v01.obj");
 
-    // unsigned int VBO , VAO, EBO;
-    // glGenVertexArrays(1, &VAO);
-    // glGenBuffers(1, &VBO);
-    // glGenBuffers(1, &EBO);
+    ObjClass ABCD( obj_path );
+    cout << ABCD.getName() << endl;
+    cout << ABCD.getDir() << endl;
+    // cout << "point Num " << ABCD.v.size() << endl;
+    // cout << "Normal Num " << ABCD.vn.size() << endl;
+    // cout << "Texture coord Num " << ABCD.vt.size() << endl;
+    cout << "face Num " << ABCD.faces_indices.size() << endl;
 
+                                    // cout <<'\n'<< endl;
+                                    // FILE* fdtest = fopen("./testdata.txt", "w+");
+                                    // if(fdtest == NULL)
+                                    // {
+                                    //     cout << "failed to open file" << endl;
+                                    // }
+                                    // else{
+                                    //     char lines[255];
+                                    //     sprintf(lines, "size: %ld\n", 3*ABCD.obj_vector[0].NumOFFaces);
+                                    //     fputs(lines, fdtest);
+                                    //     for(size_t h = 0; h < 3*ABCD.obj_vector[0].NumOFFaces; h++)
+                                    //     {
+                                    //         sprintf(lines, "%f, %f, %f, %f, %f,\n", ABCD.face_data[h].position.x,  ABCD.face_data[h].position.y,  ABCD.face_data[h].position.z,  ABCD.face_data[h].textureCoordinate.x, ABCD.face_data[h].textureCoordinate.y);
+                                    //         fputs(lines, fdtest);
+
+                                    //     } 
+                                    // }
+                                    // cout << "end;" <<endl;
+
+                // cout << "v idx= " << ABCD.faces_indices[0].x-1 << "vn idx= " << ABCD.faces_indices[0].y-1 << "vt idx= " << ABCD.faces_indices[0].z-1 << endl;
+
+
+    unsigned int VBO , VAO, EBO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+
+        glBindVertexArray(VAO);
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferData(GL_ARRAY_BUFFER, ABCD.face_data.size() * sizeof(Vertex_st), &ABCD.face_data[0], GL_STATIC_DRAW);
+
+            // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+            // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(faces), faces, GL_STATIC_DRAW);
+
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex_st), (void*)0);
+            glEnableVertexAttribArray(0);
+
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex_st), (void*)offsetof(Vertex_st, normal));
+            glEnableVertexAttribArray(1);
+
+            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex_st), (void*)offsetof(Vertex_st, textureCoordinate));
+            glEnableVertexAttribArray(2);
+            // cout << sizeof(Vertex_st) << endl;
+
+            glBindBuffer(GL_ARRAY_BUFFER, 0); 
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            glBindVertexArray(0);
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::rotate(model, glm::radians(0.0f),glm::vec3(1.0f, 0.0f, 0.0f));
@@ -243,14 +295,11 @@ int main(int argc, char** argv)
         int projectionLoc = glGetUniformLocation(OwOShader.ID, "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-        // glActiveTexture(GL_TEXTURE0);
-        // glBindTexture(GL_TEXTURE_2D, OwOTexture.texture);
-        // glActiveTexture(GL_TEXTURE1);
-        // glBindTexture(GL_TEXTURE_2D, BvTexture.texture);
+
         OwOShader.use();
 
-        // glBindVertexArray(VAO);
-        // glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBindVertexArray(VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
         // for (unsigned int i =0; i<10; i++)
         // {
@@ -259,8 +308,8 @@ int main(int argc, char** argv)
         model = glm::scale(model, glm::vec3(0.10f, 0.10f, 0.10f));
         // model = glm::rotate(model, glm::radians((float)glfwGetTime()*(i+10)),glm::vec3(1.0f, 0.5f, 0.0f));
         OwOShader.setMat4("model", model);
-        // glDrawArrays(GL_TRIANGLES, 0, 36);
-        OwOModel.Draw(OwOShader);
+        glDrawArrays(GL_TRIANGLES, 0, ABCD.obj_vector[0].NumOFFaces);
+        // OwOModel.Draw(OwOShader);
 
         // }
 
@@ -269,9 +318,9 @@ int main(int argc, char** argv)
         glfwPollEvents();
     }
 
-    // glDeleteVertexArrays(1, &VAO);
-    // glDeleteBuffers(1, &VBO);
-    // glDeleteBuffers(1, &EBO);
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
     glfwTerminate();
 
     return ret;

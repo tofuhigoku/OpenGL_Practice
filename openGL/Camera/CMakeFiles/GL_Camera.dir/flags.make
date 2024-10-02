@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/ms/openGL/Camera/include -I/home/ms/openGL/Camera/../include -I/home/ms/openGL/Camera/../include/glm-1.0.1
+CXX_INCLUDES = -I/home/ms/OpenGL_Practice/openGL/Camera/include -I/home/ms/OpenGL_Practice/openGL/Camera/../include -I/home/ms/OpenGL_Practice/openGL/Camera/../include/glm-1.0.1
 
 CXX_FLAGS = -Wall -std=c++11 -lpthread -lGL -lGLEW -lglfw -lGLU
 

@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/ms/openGL/Camera/Camera.cpp" "CMakeFiles/GL_Camera.dir/Camera.cpp.o" "gcc" "CMakeFiles/GL_Camera.dir/Camera.cpp.o.d"
+  "/home/ms/OpenGL_Practice/openGL/Camera/Camera.cpp" "CMakeFiles/GL_Camera.dir/Camera.cpp.o" "gcc" "CMakeFiles/GL_Camera.dir/Camera.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

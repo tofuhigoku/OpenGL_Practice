@@ -1,3 +1,0 @@
-/home/ms/openGL/hello_triangle/CMakeFiles/GL_hello_triangle.dir
-/home/ms/openGL/hello_triangle/CMakeFiles/edit_cache.dir
-/home/ms/openGL/hello_triangle/CMakeFiles/rebuild_cache.dir

@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wall -std=c++11 -lpthread -lGL -lGLEW -lglfw -lGLU -rdynamic CMakeFiles/GL_Texture.dir/Texture.cpp.o -o GL_Texture  -lglfw -lGLEW -lGL -lGLU

@@ -1,3 +1,0 @@
-/home/ms/openGL/create_Window/CMakeFiles/GL_create_window.dir
-/home/ms/openGL/create_Window/CMakeFiles/edit_cache.dir
-/home/ms/openGL/create_Window/CMakeFiles/rebuild_cache.dir

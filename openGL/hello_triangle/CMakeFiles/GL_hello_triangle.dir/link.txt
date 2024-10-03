@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wall -std=c++11 -lpthread -lGL -lGLEW -lglfw -lGLU -rdynamic CMakeFiles/GL_hello_triangle.dir/hello_triangle.cpp.o -o GL_hello_triangle  -lglfw -lGLEW -lGL -lGLU

@@ -1,3 +1,0 @@
-/home/ms/OpenGL_Practice/openGL/Camera/CMakeFiles/GL_Camera.dir
-/home/ms/OpenGL_Practice/openGL/Camera/CMakeFiles/edit_cache.dir
-/home/ms/OpenGL_Practice/openGL/Camera/CMakeFiles/rebuild_cache.dir

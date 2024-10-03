@@ -1,3 +1,0 @@
-/home/ms/openGL/Textures/CMakeFiles/GL_Texture.dir
-/home/ms/openGL/Textures/CMakeFiles/edit_cache.dir
-/home/ms/openGL/Textures/CMakeFiles/rebuild_cache.dir

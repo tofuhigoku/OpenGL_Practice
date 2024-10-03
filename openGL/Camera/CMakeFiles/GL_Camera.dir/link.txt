@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wall -std=c++11 -lpthread -lGL -lGLEW -lglfw -lGLU -rdynamic CMakeFiles/GL_Camera.dir/Camera.cpp.o -o GL_Camera  -lglfw -lGLEW -lGL -lGLU

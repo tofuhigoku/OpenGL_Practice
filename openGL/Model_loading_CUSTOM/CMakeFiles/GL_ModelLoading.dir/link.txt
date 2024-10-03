@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wall -std=c++11 -lpthread -lGL -lGLEW -lglfw -lGLU -lassimp -rdynamic CMakeFiles/GL_ModelLoading.dir/Model_loading.cpp.o -o GL_ModelLoading  -lglfw -lGLEW -lGL -lGLU -lassimp

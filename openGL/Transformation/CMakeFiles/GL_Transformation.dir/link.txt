@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wall -std=c++11 -lpthread -lGL -lGLEW -lglfw -lGLU -rdynamic CMakeFiles/GL_Transformation.dir/Transformation.cpp.o -o GL_Transformation  -lglfw -lGLEW -lGL -lGLU

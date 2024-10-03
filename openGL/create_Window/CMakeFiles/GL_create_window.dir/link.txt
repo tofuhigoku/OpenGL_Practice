@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wall -std=c++11 -lpthread -lGL -lGLEW -lglfw -lGLU -rdynamic CMakeFiles/GL_create_window.dir/create_window.cpp.o -o GL_create_window  -lglfw -lGLEW -lGL -lGLU

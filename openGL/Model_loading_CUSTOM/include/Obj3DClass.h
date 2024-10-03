@@ -40,20 +40,23 @@ struct Vertex_st {
     glm::vec2 textureCoordinate;
 };
 
-struct Texture {
+struct Texture_st {
     unsigned int id;
     string mtl_name;
     string path;
+    int width, height, nrChannels;
+    unsigned char *data;
+    unsigned int texture; 
 };
 
 
 struct Object
 {
-    char * object_tag;
-    size_t object_tag_len;
+    string object_tag;
+    // size_t object_tag_len;
     
-    char * mtl_name;
-    size_t mtl_name_len;
+    string mtl_name;
+    // size_t mtl_name_len;
 
     size_t NumOFFaces;
 
@@ -74,7 +77,7 @@ class ObjClass
         unsigned int index;
 
         vector<struct Object> obj_vector;
-        vector<struct Texture> Texture_vector;
+        vector<struct Texture_st> Texture_vector;
         // vector<glm::vec3> v;
         // vector<glm::vec3> vn;
         // vector<glm::vec2> vt;
@@ -88,6 +91,8 @@ class ObjClass
         int importOBJ(const string &path);
         string getName();
         string getDir();
+        int DrawMesh(ShaderClass &shader, struct Object* p_object_buffer);
+        int DrawOjbject(ShaderClass &shader);
 
     private:
         bool statusOK;
@@ -97,13 +102,15 @@ class ObjClass
         int process_rawdata(FILE* fd);
         int ExtractFaceindices(const char* dataline);
 
-        int fill_nametag(char* nametag);
+        int fill_nametag(const char* nametag);
         int fill_mtlname(const char* mtlname);
 
         int GlobTexture();
+        int LoadTexture( struct Texture_st* p_Texture_buffer);
+        int InitTexture();
 
-        int setupObjectMesh(struct Object* p_object_buffer, unsigned int &object_buffer_index);
-        int Draw(ShaderClass &shader);
+        int setupObjectMesh(struct Object* p_object_buffer, size_t &object_buffer_index);
+        
 };
 
 
@@ -129,14 +136,38 @@ ObjClass::ObjClass(const string &path)
             if(mtl_name.size() <= strlen(".mtl"))
             {
                 cout << "mtl file not found!" << endl;
+                statusOK = false;
+            }
+            else
+            {
+                GlobTexture();
+                for(size_t i =0; i <  Texture_vector.size(); i ++)
+                {
+                    cout << "texture"<<i<<"  id= "<< Texture_vector[i].id<<" mtl_name= "<<Texture_vector[i].mtl_name << " path= "<<Texture_vector[i].path <<endl;
+                }
+                InitTexture();
+            }
+        }
+
+        if(statusOK == true)
+        {
+            struct Object* p_object_buffer =  NULL;
+            for(size_t i =0; i< obj_vector.size(); i++)
+            {
+                p_object_buffer = &obj_vector[i];
+                if(setupObjectMesh(p_object_buffer, i) != 0)
+                {
+                    statusOK = false;
+                    break;
+                }
             }
         }
     }
 
 ObjClass::~ObjClass()
     {
-        if(obj_buffer.mtl_name != NULL) free(obj_buffer.mtl_name);
-        if(obj_buffer.object_tag != NULL) free(obj_buffer.object_tag);
+        // if(obj_buffer.mtl_name != NULL) free(obj_buffer.mtl_name);
+        // if(obj_buffer.object_tag != NULL) free(obj_buffer.object_tag);
 
         memset(&obj_buffer, 0, sizeof(obj_buffer));
         index =0;
@@ -214,6 +245,7 @@ int ObjClass::process_rawdata(FILE* fd)
                 {
                     string str(tag2);
                     mtl_name = str;
+                    cout << "mtl_name: " <<mtl_name<<endl;
                 }
                 continue;
             }
@@ -269,11 +301,13 @@ int ObjClass::process_rawdata(FILE* fd)
                 /* cout something here! */
                 if(strcmp(rawline.tag, "usemtl") == 0 )
                 {
-
-                    std::string str(line);
-                    string mtlname  = str.substr(str.find_first_of(' ')+1, str.size() - str.find_first_of(' '));
-
-                    fill_mtlname(mtlname.c_str());
+                    char tag2[255];
+                    sscanf(line, "%s %s", rawline.tag, tag2);
+                    std::string mtlname(tag2);
+                    // string mtlname  = str.substr(str.find_first_of(' ')+1, str.size() - str.find_first_of(' '));
+                    cout << "mtlname: " << mtlname << endl;
+                    // fill_mtlname(mtlname.c_str());
+                    obj_vector[index].mtl_name = mtlname;
                 }
                 else
                 {
@@ -328,7 +362,7 @@ int ObjClass::ExtractFaceindices(const char* dataline)
         return 0;
     }
 
-int ObjClass::fill_nametag(char* nametag)
+int ObjClass::fill_nametag(const char* nametag)
     {
         if(nametag == NULL)
         {
@@ -336,22 +370,22 @@ int ObjClass::fill_nametag(char* nametag)
             return 1;
         }
 
-        obj_buffer.object_tag_len = strlen(nametag);
-        if(obj_buffer.object_tag_len == 0  || nametag[0] == '\n' || nametag[0] == '\0')
-        {
-            cout << "invalid name tag" << endl;
-            return 1;
-        }
+        // obj_buffer.object_tag_len = strlen(nametag);
+        // if(obj_buffer.object_tag.size() == 0  || nametag[0] == '\n' || nametag[0] == '\0')
+        // {
+        //     cout << "invalid name tag" << endl;
+        //     return 1;
+        // }
 
-        obj_buffer.object_tag = NULL;
-        obj_buffer.object_tag = (char*) calloc(obj_buffer.object_tag_len, sizeof(char));
-        if(obj_buffer.object_tag == NULL)
-        {
-            cout << "obj_buffer.object_tag == NULL => calloc name tag buffer failed" << endl;
-            return 1;
-        }
-        strcpy(obj_buffer.object_tag, nametag);
-
+        // obj_buffer.object_tag = (char*) calloc(obj_buffer.object_tag_len, sizeof(char));
+        // if(obj_buffer.object_tag == NULL)
+        // {
+        //     cout << "obj_buffer.object_tag == NULL => calloc name tag buffer failed" << endl;
+        //     return 1;
+        // }
+        // strcpy(obj_buffer.object_tag, nametag);
+        string local_nametag(nametag);
+        obj_buffer.object_tag =  local_nametag;
         return 0;
     }
 
@@ -363,21 +397,23 @@ int ObjClass::fill_mtlname(const char* mtlname)
             return 1;
         }
 
-        obj_buffer.mtl_name_len = strlen(mtlname);
-        if(obj_buffer.mtl_name_len == 0  || mtlname[0] == '\n' || mtlname[0] == '\0')
-        {
-            cout << "invalid mtlname" << endl;
-            return 1;
-        }
+        // obj_buffer.mtl_name_len = strlen(mtlname);
+        // if(obj_buffer.mtl_name_len == 0  || mtlname[0] == '\n' || mtlname[0] == '\0')
+        // {
+        //     cout << "invalid mtlname" << endl;
+        //     return 1;
+        // }
 
-        obj_buffer.mtl_name = NULL;
-        obj_buffer.mtl_name = (char*) calloc(obj_buffer.mtl_name_len, sizeof(char));
-        if(obj_buffer.mtl_name == NULL)
-        {
-            cout << "obj_buffer.mtl_name == NULL => calloc mtlname buffer failed" << endl;
-            return 1;
-        }
-        strcpy(obj_buffer.mtl_name, mtlname);
+        // obj_buffer.mtl_name = NULL;
+        // obj_buffer.mtl_name = (char*) calloc(obj_buffer.mtl_name_len, sizeof(char));
+        // if(obj_buffer.mtl_name == NULL)
+        // {
+        //     cout << "obj_buffer.mtl_name == NULL => calloc mtlname buffer failed" << endl;
+        //     return 1;
+        // }
+        // strcpy(obj_buffer.mtl_name, mtlname);
+        string local_mtlname(mtlname);
+        obj_buffer.mtl_name = local_mtlname;
 
         return 0;
     }
@@ -402,12 +438,177 @@ int ObjClass::GlobTexture()
 {
     int ret = 0;
 
+    FILE* fd_mtlfile = NULL;
+    string mtl_path = directory + "/" + mtl_name;
+    cout << "mtl path: " << mtl_path << endl;
+    fd_mtlfile = fopen(mtl_path.c_str(), "r");
 
+    if(fd_mtlfile == NULL)
+    {
+        cout << "No mtl found /  Cant open mtl file" << endl;
+        return 1;
+    }
+
+    char* line = NULL;
+    size_t len = 0;
+    ssize_t read;
+
+    Texture_st texture_buffer = {0};
+    while((read = getline(&line, &len, fd_mtlfile)) != -1)
+    {
+        /* code */
+        if(line[0] == '#')
+        {
+            continue;
+        }
+
+        sscanf(line, "%s %f %f %f", rawline.tag, &rawline.d1, &rawline.d2, &rawline.d3);
+        if(strcmp(rawline.tag, "newmtl") == 0)
+        {
+            char mtl_name[255];
+            sscanf(line, "%s %s", rawline.tag, mtl_name);
+            string str(mtl_name);
+            texture_buffer.mtl_name = str;
+            cout << "newmtl: " << str << endl;
+            texture_buffer.id = Texture_vector.size();
+            Texture_vector.push_back(texture_buffer);
+        }
+        else if(strcmp(rawline.tag, "map_Kd") == 0)
+        {
+            /**
+             * @brief Diffuse map
+             * 
+             */
+            char texture_name[255];
+            sscanf(line, "%s %s", rawline.tag, texture_name);
+            cout << "texture name " << texture_name <<endl;
+            string str_texture_name(texture_name);
+            string texture_path = directory + '/' + str_texture_name;
+
+            int index = Texture_vector.size()-1;
+            if(index>=0)
+            {
+                Texture_vector[index].path = texture_path;
+            }
+            else
+            {
+                cout << "map_kd exsits before mtl " << endl;
+            }
+
+        }
+        else if(strcmp(rawline.tag, "map_Bump") == 0)
+        {
+            /**
+             * @brief For future Normal map update
+             * 
+             */
+        }
+        else if(strcmp(rawline.tag, "map_Ks") == 0)
+        {
+            /**
+             * @brief For future Specular map update
+             * 
+             */
+        }
+        
+    }
+
+    if (fd_mtlfile != NULL)
+    {
+        /* code */
+        fclose(fd_mtlfile);
+    }
+    
+
+    return ret;
+}
+int ObjClass::LoadTexture(struct Texture_st* p_Texture_buffer)
+{
+    int ret =  0;
+    if(p_Texture_buffer == NULL)
+    {
+        cout << "p_Texture_buffer = NULL " << endl;
+        return 1;
+    }
+    stbi_set_flip_vertically_on_load(true);
+
+    string texture_path = p_Texture_buffer->path;
+    unsigned char* p_data = p_Texture_buffer->data;
+    int width, height, nrChannels;
+
+    p_Texture_buffer->texture=0;
+    glGenTextures(1, &p_Texture_buffer->texture);
+    glBindTexture(GL_TEXTURE_2D, p_Texture_buffer->texture);
+    // set the texture wrapping/filtering options (on currently bound texture)
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    p_data = stbi_load(texture_path.c_str(), &width, &height, &nrChannels, 0);
+    if (p_data)
+    {
+        p_Texture_buffer->width = width;
+        p_Texture_buffer->height = height;
+        p_Texture_buffer->nrChannels = nrChannels;
+
+        cout << "nrChannels = " << p_Texture_buffer->nrChannels << endl;
+        GLenum format;
+        if(nrChannels == 4)
+        {
+            format = GL_RGBA;
+            // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, p_data);
+            // glGenerateMipmap(GL_TEXTURE_2D);
+
+        }
+        else if( nrChannels == 3)
+        {
+            format = GL_RGB;
+            // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, p_data);
+            // glGenerateMipmap(GL_TEXTURE_2D);
+        }
+        else if(nrChannels == 1)
+        {
+            format = GL_RED;
+        }
+        else
+        {
+            cout << "NUm of Channel not equal 3 or 4" << endl;
+            ret = 2;
+        }
+        
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, p_data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+        ret = 1;
+    }
+
+    stbi_image_free(p_data);
 
     return ret;
 }
 
-int ObjClass::setupObjectMesh(struct Object* p_object_buffer, unsigned int &object_buffer_index)
+int ObjClass::InitTexture()
+{
+    int ret = 0;
+    for (size_t i =0; i < Texture_vector.size(); i++)
+    {
+        ret = LoadTexture(&Texture_vector[i]);
+        if(ret ==0)
+        {
+            cout << "successfully loaded texture: "  << Texture_vector[i].path << " texture id= "<< Texture_vector[i].texture << endl;
+        }
+
+    }
+    return ret;
+
+}
+
+int ObjClass::setupObjectMesh(struct Object* p_object_buffer, size_t &object_buffer_index)
 {
 
     int ret = 0;
@@ -431,8 +632,8 @@ int ObjClass::setupObjectMesh(struct Object* p_object_buffer, unsigned int &obje
 
     glBindVertexArray(*p_VAO);
         glBindBuffer(GL_ARRAY_BUFFER, *p_VBO);
-        glBufferData(GL_ARRAY_BUFFER, p_object_buffer->NumOFFaces * sizeof(Vertex_st), &face_data[offset], GL_STATIC_DRAW);
-
+        glBufferData(GL_ARRAY_BUFFER, p_object_buffer->NumOFFaces *3* sizeof(Vertex_st), &face_data[offset], GL_STATIC_DRAW);
+        cout << "setupObjectMesh: " << p_object_buffer->object_tag << "NumOFFaces: " << p_object_buffer->NumOFFaces << " vertices size: " << p_object_buffer->NumOFFaces*3 << endl;
         // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *p_EBO);
         // glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
@@ -453,13 +654,93 @@ int ObjClass::setupObjectMesh(struct Object* p_object_buffer, unsigned int &obje
     return ret;
 }
 
-int ObjClass::Draw(ShaderClass &shader)
+int ObjClass::DrawMesh(ShaderClass &shader, struct Object* p_object_buffer )
 {
-    for(unsigned int i = 0; i < obj_vector.size(); i++)
+    // for(unsigned int i = 0; i < obj_vector.size(); i++)
+    // {
+    //     // obj_vector[i].Draw(shader);
+    //     cout << "Draw object: " << obj_vector[i].object_tag << " usemtl: " << obj_vector[i].mtl_name << endl;
+    
+    // }
+
+    // unsigned int diffuseNr = 1;
+    // unsigned int specularNr = 1;
+
+    // for(unsigned int i = 0; i < textures.size(); i++)
+    // {
+    int ret = 0;
+    if(p_object_buffer == NULL)
     {
-        // obj_vector[i].Draw(shader);
-        cout << "Draw object: " << obj_vector[i].object_tag << " usemtl: " << obj_vector[i].mtl_name << endl;
+        cout << "p_object_buffer = NULL => DrawMesh failed" << endl;
+        return 1;
     }
+    // cout << "p_object_buffer != NULL" << endl;
+
+    struct Texture_st* p_Texture_buffer = NULL;
+    // cout << "Texture_vector.size()= " << Texture_vector.size() << endl;
+    for (size_t i =0; i < Texture_vector.size() ; i++)
+    {
+        // cout << i <<" p_object_buffer->mtl_name  " << p_object_buffer->mtl_name << ends;
+        // cout << i <<" Texture_vector[i].mtl_name  " << Texture_vector[i].mtl_name << endl;
+
+        if( Texture_vector[i].mtl_name == p_object_buffer->mtl_name)
+        {
+            p_Texture_buffer = &Texture_vector[i];
+            break;
+        }
+    }
+    if(p_Texture_buffer == NULL)
+    {
+        cout << "not found matched texture : object" << p_object_buffer->mtl_name  << " : " << p_object_buffer->object_tag << endl;
+        return 1;
+    }
+    
+    cout << "found matched texture : object" << p_object_buffer->mtl_name  << " : " << p_object_buffer->object_tag << endl;
+
+    glActiveTexture(GL_TEXTURE0); // activate texture unit first
+        // retrieve texture number (the N in diffuse_textureN)
+        // string number;
+        // string name = textures[i].type;
+        // if(name == "texture_diffuse")
+        //     number = std::to_string(diffuseNr++);
+        // else if(name == "texture_specular")
+        //     number = std::to_string(specularNr++);
+
+        // cout << "name: " << name << "\tsetFloat: " << ("material." + name + number).c_str() << endl;
+
+        // shader.setFloat(("material." + name + number).c_str(), i);
+        glUniform1i(glGetUniformLocation(shader.ID, "texture_diffuse"), 0);
+        glBindTexture(GL_TEXTURE_2D, p_Texture_buffer->texture);
+    // }
+    // glActiveTexture(GL_TEXTURE0);
+
+    // draw mesh
+    glBindVertexArray(p_object_buffer->VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, p_object_buffer->VBO);
+    // glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    // glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, p_object_buffer->NumOFFaces*3);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    glActiveTexture(GL_TEXTURE0);
+
+}
+
+int ObjClass::DrawOjbject(ShaderClass &shader)
+{  
+    int ret =0;
+    struct Object* p_object_buffer = NULL;
+    for (size_t i = 0; i < obj_vector.size(); i++)
+    {
+        p_object_buffer = &obj_vector[1];
+        cout << "start draw object: " << p_object_buffer->object_tag << " num of vertices: " << p_object_buffer->NumOFFaces*3 << endl;
+        DrawMesh(shader, p_object_buffer);
+    }
+
+    return ret;
+
 }
 
 #endif

@@ -182,6 +182,12 @@ int main(int argc, char** argv)
     // cout << "Texture coord Num " << ABCD.vt.size() << endl;
     cout << "face Num " << ABCD.faces_indices.size() << endl;
 
+    // for(size_t i =0; i< ABCD.obj_vector.size(); i++)
+    // {
+    //     cout << "objecttag: "<< ABCD.obj_vector[i].object_tag << "mtlname: " << ABCD.obj_vector[i].mtl_name << endl;
+    //     cout << endl;
+    // }
+
                                     // cout <<'\n'<< endl;
                                     // FILE* fdtest = fopen("./testdata.txt", "w+");
                                     // if(fdtest == NULL)
@@ -204,38 +210,50 @@ int main(int argc, char** argv)
                 // cout << "v idx= " << ABCD.faces_indices[0].x-1 << "vn idx= " << ABCD.faces_indices[0].y-1 << "vt idx= " << ABCD.faces_indices[0].z-1 << endl;
 
 
-    unsigned int VBO , VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
+                unsigned int VBO , VAO, EBO;
+                glGenVertexArrays(1, &VAO);
+                glGenBuffers(1, &VBO);
+                glGenBuffers(1, &EBO);
 
-        glBindVertexArray(VAO);
-            glBindBuffer(GL_ARRAY_BUFFER, VBO);
-            glBufferData(GL_ARRAY_BUFFER, ABCD.face_data.size() * sizeof(Vertex_st), &ABCD.face_data[0], GL_STATIC_DRAW);
+                    glBindVertexArray(VAO);
+                        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+                        glBufferData(GL_ARRAY_BUFFER, ABCD.face_data.size() * sizeof(Vertex_st), &ABCD.face_data[0], GL_STATIC_DRAW);
+                        cout << "ABCD.obj_vector[0].NumOFFaces= " <<ABCD.obj_vector[2].NumOFFaces << endl;
+                        // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+                        // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(faces), faces, GL_STATIC_DRAW);
 
-            // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-            // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(faces), faces, GL_STATIC_DRAW);
+                        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex_st), (void*)0);
+                        glEnableVertexAttribArray(0);
 
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex_st), (void*)0);
-            glEnableVertexAttribArray(0);
+                        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex_st), (void*)offsetof(Vertex_st, normal));
+                        glEnableVertexAttribArray(1);
 
-            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex_st), (void*)offsetof(Vertex_st, normal));
-            glEnableVertexAttribArray(1);
+                        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex_st), (void*)offsetof(Vertex_st, textureCoordinate));
+                        glEnableVertexAttribArray(2);
+                        // cout << sizeof(Vertex_st) << endl;
 
-            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex_st), (void*)offsetof(Vertex_st, textureCoordinate));
-            glEnableVertexAttribArray(2);
-            // cout << sizeof(Vertex_st) << endl;
+                        glBindBuffer(GL_ARRAY_BUFFER, 0); 
+                        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+                        glBindVertexArray(0);
 
-            glBindBuffer(GL_ARRAY_BUFFER, 0); 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            glBindVertexArray(0);
+    
+    /* testure init*/
+        ImageClass  OwOTexture("./sketch/head.png", true);
+
+        OwOShader.setInt("texture_diffuse", 0);
+
+        
+
+
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::rotate(model, glm::radians(0.0f),glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::scale(model, glm::vec3(1, 1, 1));
+    model = glm::translate(model, glm::vec3(-10, -102, -3));
 
     glm::mat4 view = glm::mat4(1.0f);
     // note that we’re translating the scene in the reverse direction
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
 
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 800.0f, 0.1f, 100.0f);
@@ -295,7 +313,8 @@ int main(int argc, char** argv)
         int projectionLoc = glGetUniformLocation(OwOShader.ID, "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-
+        // glActiveTexture(GL_TEXTURE0);
+        // glBindTexture(GL_TEXTURE_2D, OwOTexture.texture);
         OwOShader.use();
 
         glBindVertexArray(VAO);
@@ -303,13 +322,31 @@ int main(int argc, char** argv)
 
         // for (unsigned int i =0; i<10; i++)
         // {
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(0.10f, 0.10f, 0.10f));
+        // glm::mat4 model = glm::mat4(1.0f);
+        // model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+        // model = glm::scale(model, glm::vec3(0.10f, 0.10f, 0.10f));
         // model = glm::rotate(model, glm::radians((float)glfwGetTime()*(i+10)),glm::vec3(1.0f, 0.5f, 0.0f));
         OwOShader.setMat4("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, ABCD.obj_vector[0].NumOFFaces);
+
+        
+        ImageClass  OwOTexture("./sketch/head.png", true);
+        OwOShader.setInt("texture_diffuse", 0);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, OwOTexture.texture);
+        glDrawArrays(GL_TRIANGLES, 0, ABCD.obj_vector[0].NumOFFaces *3 );
+        // glDrawArrays(GL_TRIANGLES, ABCD.obj_vector[0].NumOFFaces *3,  ABCD.obj_vector[1].NumOFFaces *3);
+        glDrawArrays(GL_TRIANGLES, ABCD.obj_vector[0].NumOFFaces *3 + ABCD.obj_vector[1].NumOFFaces *3,  ABCD.obj_vector[2].NumOFFaces *3);
+        // glDrawArrays(GL_TRIANGLES, ABCD.obj_vector[0].NumOFFaces *3 + ABCD.obj_vector[1].NumOFFaces *3 + ABCD.obj_vector[2].NumOFFaces *3,  ABCD.obj_vector[3].NumOFFaces *3);
+
+        // ImageClass  OwOTexture("./sketch/head.png", true);
+
+        // OwOShader.setInt("texture_diffuse", 0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0); 
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
         // OwOModel.Draw(OwOShader);
+        // ABCD.DrawOjbject(OwOShader);
 
         // }
 

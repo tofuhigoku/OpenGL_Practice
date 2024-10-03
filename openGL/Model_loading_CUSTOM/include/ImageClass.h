@@ -48,7 +48,7 @@ ImageClass::ImageClass(const char* image_path, bool flip)
     data = stbi_load(image_path, &width, &height, &nrChannels, 0);
     if (data)
     {
-        cout << "nrChannels = " << nrChannels << endl;
+        // cout << "nrChannels = " << nrChannels << endl;
         if(nrChannels == 4)
         {
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);

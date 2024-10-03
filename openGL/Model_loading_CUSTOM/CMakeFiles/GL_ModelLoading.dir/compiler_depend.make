@@ -194,12 +194,11 @@ CMakeFiles/GL_ModelLoading.dir/Model_loading.cpp.o: Model_loading.cpp \
   /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/vec3.hpp \
   /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/vec4.hpp \
   /home/ms/OpenGL_Practice/openGL/include/stb_image.h \
-  /home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/Model_loading.cpp \
-  /home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/include/ImageClass.h \
-  /home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/include/Mesh.h \
-  /home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/include/ModelClass.h \
-  /home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/include/Obj3DClass.h \
-  /home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/include/ShaderClass.h \
+  include/ImageClass.h \
+  include/Mesh.h \
+  include/ModelClass.h \
+  include/Obj3DClass.h \
+  include/ShaderClass.h \
   /usr/include/GL/gl.h \
   /usr/include/GL/glew.h \
   /usr/include/GL/glu.h \
@@ -465,6 +464,8 @@ CMakeFiles/GL_ModelLoading.dir/Model_loading.cpp.o: Model_loading.cpp \
 
 /usr/lib/gcc/x86_64-linux-gnu/9/include/stdint.h:
 
+/usr/lib/gcc/x86_64-linux-gnu/9/include/stddef.h:
+
 /usr/lib/gcc/x86_64-linux-gnu/9/include/float.h:
 
 /usr/include/x86_64-linux-gnu/sys/types.h:
@@ -719,10 +720,6 @@ CMakeFiles/GL_ModelLoading.dir/Model_loading.cpp.o: Model_loading.cpp \
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_relational.inl:
 
-/usr/lib/gcc/x86_64-linux-gnu/9/include/stddef.h:
-
-/home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/include/Obj3DClass.h:
-
 /usr/include/c++/9/cstddef:
 
 /usr/include/c++/9/bits/basic_string.tcc:
@@ -732,6 +729,8 @@ CMakeFiles/GL_ModelLoading.dir/Model_loading.cpp.o: Model_loading.cpp \
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_int3.hpp:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_double4.hpp:
+
+include/ModelClass.h:
 
 /usr/include/assimp/vector2.h:
 
@@ -744,6 +743,8 @@ CMakeFiles/GL_ModelLoading.dir/Model_loading.cpp.o: Model_loading.cpp \
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_bool4_precision.hpp:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_bool3.hpp:
+
+/home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_bool3_precision.hpp:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_bool2.hpp:
 
@@ -857,14 +858,6 @@ Model_loading.cpp:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_uint3.hpp:
 
-/usr/include/c++/9/bits/move.h:
-
-/home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/matrix_double4x2_precision.hpp:
-
-/home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_bool3_precision.hpp:
-
-/home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/include/ShaderClass.h:
-
 /usr/include/x86_64-linux-gnu/bits/wordsize.h:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/matrix_double3x4.hpp:
@@ -878,8 +871,6 @@ Model_loading.cpp:
 /usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/matrix_float3x3.hpp:
-
-/home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/include/ImageClass.h:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/matrix_double2x3_precision.hpp:
 
@@ -925,6 +916,8 @@ Model_loading.cpp:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/detail/type_vec3.inl:
 
+include/ShaderClass.h:
+
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/detail/type_vec4.inl:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/matrix_float2x4_precision.hpp:
@@ -956,6 +949,8 @@ Model_loading.cpp:
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/detail/type_vec3.hpp:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/vec4.hpp:
+
+/home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/detail/type_mat4x2.hpp:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/detail/func_exponential.inl:
 
@@ -1013,8 +1008,6 @@ Model_loading.cpp:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/detail/type_float.hpp:
 
-/home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/include/Mesh.h:
-
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/detail/type_mat3x4.hpp:
 
 /usr/include/assimp/vector3.inl:
@@ -1052,8 +1045,6 @@ Model_loading.cpp:
 /usr/include/x86_64-linux-gnu/bits/time64.h:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/matrix_float3x4_precision.hpp:
-
-/home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/detail/type_mat4x2.inl:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/matrix_double4x4.hpp:
 
@@ -1149,6 +1140,8 @@ Model_loading.cpp:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/quaternion_geometric.hpp:
 
+include/Mesh.h:
+
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/quaternion_common.inl:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/quaternion_double.hpp:
@@ -1160,8 +1153,6 @@ Model_loading.cpp:
 /usr/lib/gcc/x86_64-linux-gnu/9/include/limits.h:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/quaternion_float_precision.hpp:
-
-/home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/include/ModelClass.h:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_bool2_precision.hpp:
 
@@ -1188,6 +1179,8 @@ Model_loading.cpp:
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/mat3x4.hpp:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_float1.hpp:
+
+include/Obj3DClass.h:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_float2.hpp:
 
@@ -1233,9 +1226,9 @@ Model_loading.cpp:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/vec3.hpp:
 
-/home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/detail/type_mat4x2.hpp:
+/home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/detail/type_mat4x2.inl:
 
-/home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/Model_loading.cpp:
+include/ImageClass.h:
 
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/mat4x4.hpp:
 
@@ -1362,3 +1355,7 @@ Model_loading.cpp:
 /home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/vector_float3.hpp:
 
 /usr/include/c++/9/bits/localefwd.h:
+
+/home/ms/OpenGL_Practice/openGL/include/glm-1.0.1/glm/ext/matrix_double4x2_precision.hpp:
+
+/usr/include/c++/9/bits/move.h:

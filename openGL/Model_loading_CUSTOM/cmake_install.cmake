@@ -1,4 +1,4 @@
-# Install script for directory: /home/ms/openGL/Model_loading_CUSTOM
+# Install script for directory: /home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -57,6 +57,6 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-  file(WRITE "/home/ms/openGL/Model_loading_CUSTOM/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "/home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

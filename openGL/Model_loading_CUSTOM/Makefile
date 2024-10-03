@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ms/openGL/Model_loading_CUSTOM
+CMAKE_SOURCE_DIR = /home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ms/openGL/Model_loading_CUSTOM
+CMAKE_BINARY_DIR = /home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ms/openGL/Model_loading_CUSTOM/CMakeFiles /home/ms/openGL/Model_loading_CUSTOM//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/CMakeFiles /home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ms/openGL/Model_loading_CUSTOM/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ms/OpenGL_Practice/openGL/Model_loading_CUSTOM/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

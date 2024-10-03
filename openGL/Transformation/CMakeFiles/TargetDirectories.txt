@@ -1,0 +1,3 @@
+/home/ms/openGL/Transformation/CMakeFiles/GL_Transformation.dir
+/home/ms/openGL/Transformation/CMakeFiles/edit_cache.dir
+/home/ms/openGL/Transformation/CMakeFiles/rebuild_cache.dir

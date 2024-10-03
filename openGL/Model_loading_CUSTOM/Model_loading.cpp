@@ -336,28 +336,35 @@ int main(int argc, char** argv)
 
         
         
-        glActiveTexture(GL_TEXTURE0);
-        // glBindTexture(GL_TEXTURE_2D, HEADTexture.texture);
-        glBindTexture(GL_TEXTURE_2D, ABCD.Texture_vector[0].texture);
+        // glActiveTexture(GL_TEXTURE0);
+        // // glBindTexture(GL_TEXTURE_2D, HEADTexture.texture);
+        // glBindTexture(GL_TEXTURE_2D, ABCD.Texture_vector[0].texture);
 
-        glDrawArrays(GL_TRIANGLES, 0, ABCD.obj_vector[0].NumOFFaces *3 );
-        // glDrawArrays(GL_TRIANGLES, ABCD.obj_vector[0].NumOFFaces *3,  ABCD.obj_vector[1].NumOFFaces *3);
-        glDrawArrays(GL_TRIANGLES, ABCD.obj_vector[0].NumOFFaces *3 + ABCD.obj_vector[1].NumOFFaces *3,  ABCD.obj_vector[2].NumOFFaces *3);
-        // glDrawArrays(GL_TRIANGLES, ABCD.obj_vector[0].NumOFFaces *3 + ABCD.obj_vector[1].NumOFFaces *3 + ABCD.obj_vector[2].NumOFFaces *3,  ABCD.obj_vector[3].NumOFFaces *3);
+        // glDrawArrays(GL_TRIANGLES, 0, ABCD.obj_vector[0].NumOFFaces *3 );
+        // // glDrawArrays(GL_TRIANGLES, ABCD.obj_vector[0].NumOFFaces *3,  ABCD.obj_vector[1].NumOFFaces *3);
+        // glDrawArrays(GL_TRIANGLES, ABCD.obj_vector[0].NumOFFaces *3 + ABCD.obj_vector[1].NumOFFaces *3,  ABCD.obj_vector[2].NumOFFaces *3);
+        // // glDrawArrays(GL_TRIANGLES, ABCD.obj_vector[0].NumOFFaces *3 + ABCD.obj_vector[1].NumOFFaces *3 + ABCD.obj_vector[2].NumOFFaces *3,  ABCD.obj_vector[3].NumOFFaces *3);
 
-        glActiveTexture(GL_TEXTURE0);
-        // glBindTexture(GL_TEXTURE_2D, BODYTexture.texture);
-        glBindTexture(GL_TEXTURE_2D, ABCD.Texture_vector[1].texture);
-        glDrawArrays(GL_TRIANGLES, ABCD.obj_vector[0].NumOFFaces *3 + ABCD.obj_vector[1].NumOFFaces *3 + ABCD.obj_vector[2].NumOFFaces *3 + ABCD.obj_vector[3].NumOFFaces *3,  ABCD.obj_vector[4].NumOFFaces *3);
+        // glActiveTexture(GL_TEXTURE0);
+        // // glBindTexture(GL_TEXTURE_2D, BODYTexture.texture);
+        // glBindTexture(GL_TEXTURE_2D, ABCD.Texture_vector[1].texture);
+        // glDrawArrays(GL_TRIANGLES, ABCD.obj_vector[0].NumOFFaces *3 + ABCD.obj_vector[1].NumOFFaces *3 + ABCD.obj_vector[2].NumOFFaces *3 + ABCD.obj_vector[3].NumOFFaces *3,  ABCD.obj_vector[4].NumOFFaces *3);
 
-        glActiveTexture(GL_TEXTURE0);
-        // glBindTexture(GL_TEXTURE_2D, allTexture.texture);
-        glBindTexture(GL_TEXTURE_2D, ABCD.Texture_vector[2].texture);
-        glDrawArrays(GL_TRIANGLES, ABCD.obj_vector[0].NumOFFaces *3 + ABCD.obj_vector[1].NumOFFaces *3 + ABCD.obj_vector[2].NumOFFaces *3 + ABCD.obj_vector[3].NumOFFaces *3 + ABCD.obj_vector[4].NumOFFaces *3 + ABCD.obj_vector[5].NumOFFaces *3 + ABCD.obj_vector[6].NumOFFaces *3,  ABCD.obj_vector[7].NumOFFaces *3);
+        // glActiveTexture(GL_TEXTURE0);
+        // // glBindTexture(GL_TEXTURE_2D, allTexture.texture);
+        // glBindTexture(GL_TEXTURE_2D, ABCD.Texture_vector[2].texture);
+        // glDrawArrays(GL_TRIANGLES, ABCD.obj_vector[0].NumOFFaces *3 + ABCD.obj_vector[1].NumOFFaces *3 + ABCD.obj_vector[2].NumOFFaces *3 + ABCD.obj_vector[3].NumOFFaces *3 + ABCD.obj_vector[4].NumOFFaces *3 + ABCD.obj_vector[5].NumOFFaces *3 + ABCD.obj_vector[6].NumOFFaces *3,  ABCD.obj_vector[7].NumOFFaces *3);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0); 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
+
+        ABCD.DrawMesh(OwOShader, &ABCD.obj_vector[0]);
+        ABCD.DrawMesh(OwOShader, &ABCD.obj_vector[2]);
+
+        ABCD.DrawMesh(OwOShader, &ABCD.obj_vector[4]);
+        ABCD.DrawMesh(OwOShader, &ABCD.obj_vector[7]);
+
         // OwOModel.Draw(OwOShader);
         // ABCD.DrawOjbject(OwOShader);
 

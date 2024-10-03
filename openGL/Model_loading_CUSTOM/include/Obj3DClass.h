@@ -60,7 +60,7 @@ struct Object
 
     size_t NumOFFaces;
 
-    unsigned int VAO, VBO, EBO;
+    // unsigned int VAO, VBO, EBO;
     // size_t NumOFVertex_position;
     // size_t NumOFVertex_normal;
     // size_t NumOFTexture_coordinate;
@@ -75,6 +75,8 @@ class ObjClass
 
         struct Object obj_buffer;
         unsigned int index;
+
+        unsigned int VAO, VBO, EBO;
 
         vector<struct Object> obj_vector;
         vector<struct Texture_st> Texture_vector;
@@ -109,7 +111,7 @@ class ObjClass
         int LoadTexture( struct Texture_st* p_Texture_buffer);
         int InitTexture();
 
-        int setupObjectMesh(struct Object* p_object_buffer, size_t &object_buffer_index);
+        int setupObjectMesh();
         
 };
 
@@ -151,16 +153,21 @@ ObjClass::ObjClass(const string &path)
 
         if(statusOK == true)
         {
-            struct Object* p_object_buffer =  NULL;
-            for(size_t i =0; i< obj_vector.size(); i++)
+            if(setupObjectMesh() != 0)
             {
-                p_object_buffer = &obj_vector[i];
-                if(setupObjectMesh(p_object_buffer, i) != 0)
-                {
-                    statusOK = false;
-                    break;
-                }
+                statusOK = false;
             }
+
+            // struct Object* p_object_buffer =  NULL;
+            // for(size_t i =0; i< obj_vector.size(); i++)
+            // {
+            //     p_object_buffer = &obj_vector[i];
+            //     if(setupObjectMesh(p_object_buffer, i) != 0)
+            //     {
+            //         statusOK = false;
+            //         break;
+            //     }
+            // }
         }
     }
 
@@ -370,20 +377,6 @@ int ObjClass::fill_nametag(const char* nametag)
             return 1;
         }
 
-        // obj_buffer.object_tag_len = strlen(nametag);
-        // if(obj_buffer.object_tag.size() == 0  || nametag[0] == '\n' || nametag[0] == '\0')
-        // {
-        //     cout << "invalid name tag" << endl;
-        //     return 1;
-        // }
-
-        // obj_buffer.object_tag = (char*) calloc(obj_buffer.object_tag_len, sizeof(char));
-        // if(obj_buffer.object_tag == NULL)
-        // {
-        //     cout << "obj_buffer.object_tag == NULL => calloc name tag buffer failed" << endl;
-        //     return 1;
-        // }
-        // strcpy(obj_buffer.object_tag, nametag);
         string local_nametag(nametag);
         obj_buffer.object_tag =  local_nametag;
         return 0;
@@ -397,21 +390,6 @@ int ObjClass::fill_mtlname(const char* mtlname)
             return 1;
         }
 
-        // obj_buffer.mtl_name_len = strlen(mtlname);
-        // if(obj_buffer.mtl_name_len == 0  || mtlname[0] == '\n' || mtlname[0] == '\0')
-        // {
-        //     cout << "invalid mtlname" << endl;
-        //     return 1;
-        // }
-
-        // obj_buffer.mtl_name = NULL;
-        // obj_buffer.mtl_name = (char*) calloc(obj_buffer.mtl_name_len, sizeof(char));
-        // if(obj_buffer.mtl_name == NULL)
-        // {
-        //     cout << "obj_buffer.mtl_name == NULL => calloc mtlname buffer failed" << endl;
-        //     return 1;
-        // }
-        // strcpy(obj_buffer.mtl_name, mtlname);
         string local_mtlname(mtlname);
         obj_buffer.mtl_name = local_mtlname;
 
@@ -552,20 +530,15 @@ int ObjClass::LoadTexture(struct Texture_st* p_Texture_buffer)
         p_Texture_buffer->height = height;
         p_Texture_buffer->nrChannels = nrChannels;
 
-        cout << "nrChannels = " << p_Texture_buffer->nrChannels << endl;
+        // cout << "nrChannels = " << p_Texture_buffer->nrChannels << endl;
         GLenum format;
         if(nrChannels == 4)
         {
             format = GL_RGBA;
-            // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, p_data);
-            // glGenerateMipmap(GL_TEXTURE_2D);
-
         }
         else if( nrChannels == 3)
         {
             format = GL_RGB;
-            // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, p_data);
-            // glGenerateMipmap(GL_TEXTURE_2D);
         }
         else if(nrChannels == 1)
         {
@@ -602,53 +575,53 @@ int ObjClass::InitTexture()
         {
             cout << "successfully loaded texture: "  << Texture_vector[i].path << " texture id= "<< Texture_vector[i].texture << endl;
         }
-
     }
     return ret;
-
 }
 
-int ObjClass::setupObjectMesh(struct Object* p_object_buffer, size_t &object_buffer_index)
+int ObjClass::setupObjectMesh()
 {
 
     int ret = 0;
-    if(p_object_buffer == NULL)
-    {
-        cout << "p_object_buffer = NULL => setupObjectMesh failed" << endl;
-        return 1;
-    }
-    unsigned int offset = 0;
-    for (size_t u = 0; u < object_buffer_index; u++)
-    {
-        offset += obj_vector[u].NumOFFaces;
-    }
-    unsigned int* p_VAO  = &p_object_buffer->VAO;
-    unsigned int* p_VBO = &p_object_buffer->VBO;
-    unsigned int* p_EBO = &p_object_buffer->EBO;
+    // if(p_object_buffer == NULL)
+    // {
+    //     cout << "p_object_buffer = NULL => setupObjectMesh failed" << endl;
+    //     return 1;
+    // }
+    // unsigned int offset = 0;
+    // for (size_t u = 0; u < object_buffer_index; u++)
+    // {
+    //     offset += obj_vector[u].NumOFFaces;
+    // }
+    // unsigned int* p_VAO  = &p_object_buffer->VAO;
+    // unsigned int* p_VBO = &p_object_buffer->VBO;
+    // unsigned int* p_EBO = &p_object_buffer->EBO;
 
-    glGenVertexArrays(1, p_VAO);
-    glGenBuffers(1, p_VBO);
-    glGenBuffers(1, p_EBO);
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
 
-    glBindVertexArray(*p_VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, *p_VBO);
-        glBufferData(GL_ARRAY_BUFFER, p_object_buffer->NumOFFaces *3* sizeof(Vertex_st), &face_data[offset], GL_STATIC_DRAW);
-        cout << "setupObjectMesh: " << p_object_buffer->object_tag << "NumOFFaces: " << p_object_buffer->NumOFFaces << " vertices size: " << p_object_buffer->NumOFFaces*3 << endl;
-        // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *p_EBO);
-        // glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+    glBindVertexArray(VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        // glBufferData(GL_ARRAY_BUFFER, p_object_buffer->NumOFFaces *3* sizeof(Vertex_st), &face_data[offset], GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, face_data.size() * sizeof(Vertex_st), &face_data[0], GL_STATIC_DRAW);
+        // cout << "setupObjectMesh: " << p_object_buffer->object_tag << "NumOFFaces: " << p_object_buffer->NumOFFaces << " vertices size: " << p_object_buffer->NumOFFaces*3 << endl;
+
 
         // vertex positions
-        glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex_st), (void*)0);
+        glEnableVertexAttribArray(0);
 
         // vertex normals
-        glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex_st), (void*)offsetof(Vertex_st, normal));
+        glEnableVertexAttribArray(1);
 
         // vertex texture coords
-        glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex_st), (void*)offsetof(Vertex_st, textureCoordinate));
-        
+        glEnableVertexAttribArray(2);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0); 
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
     return ret;
@@ -715,11 +688,23 @@ int ObjClass::DrawMesh(ShaderClass &shader, struct Object* p_object_buffer )
     // glActiveTexture(GL_TEXTURE0);
 
     // draw mesh
-    glBindVertexArray(p_object_buffer->VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, p_object_buffer->VBO);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
     // glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     // glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
-    glDrawArrays(GL_TRIANGLES, 0, p_object_buffer->NumOFFaces*3);
+    int first = 0;
+     struct Object* p_local =NULL; 
+    for(size_t i =0; i< obj_vector.size(); i++)
+    {
+        p_local = &obj_vector[i];
+        if(p_local == p_object_buffer)
+        {
+            break;
+        }
+        first += obj_vector[i].NumOFFaces;
+        
+    }
+    glDrawArrays(GL_TRIANGLES, first*3, p_object_buffer->NumOFFaces*3);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
